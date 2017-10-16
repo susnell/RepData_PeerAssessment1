@@ -4,7 +4,6 @@ output:
   html_document:
     highlight: tango
     keep_md: yes
-    theme: flatly
 ---
 
 # Personal Activity Monitoring
@@ -26,7 +25,7 @@ library(knitr)
 
 The data for the project is assumed to be in a file named "activity.csv" in the working directory. If the file is still zipped, the script will first unzip the file, and then read it.
 
-```{r, results="hide"}
+```{r reading, results="hide"}
 if(!file.exists("activity.csv")){
   unzip("./activity.zip")}
 data0<-read.csv("./activity.csv")
@@ -46,7 +45,7 @@ There are some missing values in the data set, that will be dealt with two diffe
 The methods and their impact will be discussed more further.
 
 The date variable is converted to date in preprocessing.
-```{r}
+```{r datetodate}
 data0$date<-ymd(data0$date)
 ```
 
@@ -57,12 +56,12 @@ data0$date<-ymd(data0$date)
 #### Method 1 - Missing values omitted
 
 In the first analysis, the missing values in the data are just omitted. 
-```{r}
+```{r method1}
 odata<-na.omit(data0)
 ```
 
 Average number of steps taken each day is 10766 steps.  The median of daily total steps is 10765. 
-```{r, results="asis"}
+```{r means1, results="asis"}
 means1<-odata %>%
     group_by(date) %>%
     summarise(dailytotal=sum(steps)) %>%
@@ -99,7 +98,7 @@ g+geom_line(col="darkseagreen",lwd=1)+
 
 The 5-minute interval with highest number of daily average steps is interval 835. During this time of day 206 steps are taken on the average.
 
-```{r, results="asis"}
+```{r maxinterval, results="asis"}
 maxint<-idata[which.max(idata$averagesteps),]
 kable(maxint, align = "l")
 ```
@@ -107,7 +106,7 @@ kable(maxint, align = "l")
 ## Imputing missing values
 
 There are a total of 2304 rows of missing values in the data set. 
-```{r}
+```{r missing}
 table(is.na(data0$steps))
 ```
 
@@ -115,7 +114,7 @@ table(is.na(data0$steps))
 There is no data for certain dates at all. In total 8 days in the data set have no measured data. The rest of the data for the other 53 days contains no missing values. The dates have intervals with zero measured activity, but that is a measurement, not missing data.
 
 
-```{r, echo=FALSE, results="hide"}
+```{r daysmissing, echo=FALSE, results="hide"}
 nadates<-data0 %>%
   filter(is.na(steps)) %>%
   count(date,is.na(steps)) %>%
@@ -126,7 +125,7 @@ nadates<-data0 %>%
 
 Missing values in the data set are imputed with the means of steps in each interval across all days, since the missing values are from whole days. The missing 8 days of data are replaced by average daily activity patterns.
 
-```{r}
+```{r method2}
 imdata<-data0 %>%
   group_by(interval) %>%
   mutate(steps= replace(steps, is.na(steps), mean(steps, na.rm=TRUE)))
@@ -134,7 +133,7 @@ imdata<-data0 %>%
 
 The difference in the estimates between method 1 (omitting NA's) and method 2 (replacing NA's with interval means) is small. The mean of daily total steps is not affected by this method of imputing interval means. The median of daily total steps rises only by 1.2 steps. 
 
-```{r, results="asis"}
+```{r compare, results="asis"}
 means2<-imdata %>%
   group_by(date) %>%
   summarise(dailytotal=sum(steps)) %>%
