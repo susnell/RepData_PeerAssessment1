@@ -179,7 +179,9 @@ wwtable<-wdata %>%
 g<-ggplot(wwtable,aes(interval,averagesteps))
 g+geom_line(col="steelblue",lwd=1)+
   facet_grid(weekday ~ .)+
-  labs(title="Average Daily Activity on Weekdays and Weekends (Method 2)",x="5-minute interval",y="average steps")
+  labs(title="Average Daily Activity on Weekdays and Weekends (Method 2)",
+       x="5-minute interval",
+       y="average steps")
 ```
 
 The data set used in the weekday/weekend comparison above is the one where missing values were replaced by interval means (method 2). This slightly evens out the difference between different types of days. But the shape of the daily activity pattern hardly alters between the two methods. Method 1 of just omitting the missing values would have produced very similar patterns.
@@ -196,7 +198,9 @@ wwtable<-wdata %>%
 g<-ggplot(wwtable,aes(interval,averagesteps))
 g+geom_line(col="darkseagreen",lwd=1)+
   facet_grid(weekday ~ .)+
-  labs(title="Average Daily Activity on Weekdays and Weekends (Method 1)",x="5-minute interval",y="average steps")
+  labs(title="Average Daily Activity on Weekdays and Weekends (Method 1)",
+       x="5-minute interval",
+       y="average steps")
 ```
 
 

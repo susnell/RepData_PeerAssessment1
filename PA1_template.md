@@ -211,7 +211,9 @@ wwtable<-wdata %>%
 g<-ggplot(wwtable,aes(interval,averagesteps))
 g+geom_line(col="steelblue",lwd=1)+
   facet_grid(weekday ~ .)+
-  labs(title="Average Daily Activity on Weekdays and Weekends (Method 2)",x="5-minute interval",y="average steps")
+  labs(title="Average Daily Activity on Weekdays and Weekends (Method 2)",
+       x="5-minute interval",
+       y="average steps")
 ```
 
 ![](PA1_template_files/figure-html/weekdayend2-1.png)<!-- -->
